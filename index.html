@@ -26,14 +26,24 @@
         <label for="longitude">Longitude (degrees, -180 to 180):</label>
         <input type="number" id="longitude" step="any" min="-180" max="180">
         <button onclick="setManualLocation()">Set Location</button>
-        <p><em>Note: Location is used for moonrise and moonset calculations. If not set, these will not be displayed.</em></p>
+        <p><em>Note: Location is used for moonrise, moonset, moon transit, sunrise, sunset, and solar noon calculations. If not set, these will not be displayed.</em></p>
     </section>
     <section>
-        <h2>Astronomical Details</h2>
+        <h2>Moon Details</h2>
         <p id="todaysMoonPhase"></p>
         <p id="exactMoonPhase"></p>
         <p id="nextMoonrise"></p>
         <p id="nextMoonset"></p>
+        <p id="nextMoonTransit"></p>
+    </section>
+    <section>
+        <h2>Sun Details</h2>
+        <p id="nextSunrise"></p>
+        <p id="nextSunset"></p>
+        <p id="nextSolarNoon"></p>
+    </section>
+    <section>
+        <h2>Future Events</h2>
         <p id="nextFullMoon"></p>
         <p id="nextNewMoon"></p>
         <p id="nextEclipse"></p>
