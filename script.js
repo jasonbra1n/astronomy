@@ -8,6 +8,28 @@ const datePicker = flatpickr("#dateInput", {
     defaultDate: new Date(),
 });
 
+const phaseEmojis = {
+    'New Moon': '🌑',
+    'Waxing Crescent': '🌒',
+    'First Quarter': '🌓',
+    'Waxing Gibbous': '🌔',
+    'Full Moon': '🌕',
+    'Waning Gibbous': '🌖',
+    'Third Quarter': '🌗',
+    'Waning Crescent': '🌘'
+};
+
+function getMoonPhaseName(phase) {
+    if (phase <= 10 || phase >= 350) return 'New Moon';
+    else if (phase < 80) return 'Waxing Crescent';
+    else if (phase <= 100) return 'First Quarter';
+    else if (phase < 170) return 'Waxing Gibbous';
+    else if (phase <= 190) return 'Full Moon';
+    else if (phase < 260) return 'Waning Gibbous';
+    else if (phase <= 280) return 'Third Quarter';
+    else return 'Waning Crescent';
+}
+
 function resetToNow() {
     datePicker.setDate(new Date());
     updateInfo();
@@ -15,19 +37,35 @@ function resetToNow() {
 
 function updateInfo() {
     const selectedDate = datePicker.selectedDates[0] || new Date();
-    // Moon Phase
-    const phase = Astronomy.MoonPhase(selectedDate);
-    let phaseDesc;
-    if (phase < 1 || phase > 359) phaseDesc = 'New Moon';
-    else if (phase < 89) phaseDesc = 'Waxing Crescent';
-    else if (phase < 91) phaseDesc = 'First Quarter';
-    else if (phase < 179) phaseDesc = 'Waxing Gibbous';
-    else if (phase < 181) phaseDesc = 'Full Moon';
-    else if (phase < 269) phaseDesc = 'Waning Gibbous';
-    else if (phase < 271) phaseDesc = 'Third Quarter';
-    else phaseDesc = 'Waning Crescent';
-    const emoji = getMoonEmoji(phase);
-    document.getElementById('moonPhase').textContent = `Current Moon Phase: ${emoji} ${phaseDesc} (${phase.toFixed(2)}°)`;
+    // Calculate midnight of the selected date
+    const midnight = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, 0, 0);
+    // Today's Moon Phase at midnight
+    const midnightPhase = Astronomy.MoonPhase(midnight);
+    const todaysPhaseName = getMoonPhaseName(midnightPhase);
+    const todaysEmoji = phaseEmojis[todaysPhaseName];
+    document.getElementById('todaysMoonPhase').textContent = `Today's Moon Phase: ${todaysEmoji} ${todaysPhaseName}`;
+
+    // Exact Moon Phase at selected time
+    const exactPhase = Astronomy.MoonPhase(selectedDate);
+    const exactPhaseName = getMoonPhaseName(exactPhase);
+    const exactEmoji = phaseEmojis[exactPhaseName];
+    document.getElementById('exactMoonPhase').textContent = `Moon Phase at Selected Time: ${exactEmoji} ${exactPhaseName} (${exactPhase.toFixed(2)}°)`;
+
+    // Moonrise and Moonset
+    if (currentLatitude !== null && currentLongitude !== null) {
+        const observer = new Astronomy.Observer(currentLatitude, currentLongitude, 0);
+        const moonrise = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, 1, selectedDate, 1);
+        const moonset = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, -1, selectedDate, 1);
+        document.getElementById('nextMoonrise').textContent = moonrise ?
+            `Next Moonrise: ${moonrise.date.toLocaleString()}` :
+            'Next Moonrise: Not available';
+        document.getElementById('nextMoonset').textContent = moonset ?
+            `Next Moonset: ${moonset.date.toLocaleString()}` :
+            'Next Moonset: Not available';
+    } else {
+        document.getElementById('nextMoonrise').textContent = 'Next Moonrise: Location not set';
+        document.getElementById('nextMoonset').textContent = 'Next Moonset: Location not set';
+    }
 
     // Next Full Moon
     const nextFullMoon = Astronomy.SearchMoonPhase(180, selectedDate, 365);
@@ -63,17 +101,6 @@ function updateInfo() {
     }
 }
 
-function getMoonEmoji(phase) {
-    if (phase < 1 || phase > 359) return '🌑'; // New Moon
-    else if (phase < 89) return '🌒'; // Waxing Crescent
-    else if (phase < 91) return '🌓'; // First Quarter
-    else if (phase < 179) return '🌔'; // Waxing Gibbous
-    else if (phase < 181) return '🌕'; // Full Moon
-    else if (phase < 269) return '🌖'; // Waning Gibbous
-    else if (phase < 271) return '🌗'; // Third Quarter
-    else return '🌘'; // Waning Crescent
-}
-
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -84,6 +111,7 @@ function getLocation() {
                     `Current Location: Latitude ${currentLatitude.toFixed(2)}°, Longitude ${currentLongitude.toFixed(2)}°`;
                 document.getElementById('latitude').value = currentLatitude;
                 document.getElementById('longitude').value = currentLongitude;
+                updateInfo();
             },
             (error) => {
                 alert('Unable to retrieve location: ' + error.message);
@@ -109,6 +137,7 @@ function setManualLocation() {
     currentLongitude = lon;
     document.getElementById('locationDisplay').textContent =
         `Current Location: Latitude ${lat.toFixed(2)}°, Longitude ${lon.toFixed(2)}°`;
+    updateInfo();
 }
 
 // Initial update
