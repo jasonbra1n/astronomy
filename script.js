@@ -1,65 +1,77 @@
 let currentLatitude = null;
 let currentLongitude = null;
 
-function updateInfo() {
-    const dateText = document.getElementById('dateInput').value;
-    let date;
-    if (dateText) {
-        const parsedText = dateText.replace(' ', 'T') + 'Z';
-        date = new Date(parsedText);
-        if (isNaN(date.getTime())) {
-            alert('Invalid date format. Please use YYYY-MM-DD HH:MM:SS');
-            return;
-        }
-    } else {
-        date = new Date();
-    }
+const datePicker = flatpickr("#dateInput", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i:S",
+    time_24hr: true,
+    defaultDate: new Date(),
+});
 
+function resetToNow() {
+    datePicker.setDate(new Date());
+    updateInfo();
+}
+
+function updateInfo() {
+    const selectedDate = datePicker.selectedDates[0] || new Date();
     // Moon Phase
-    const phase = Astronomy.MoonPhase(date);
+    const phase = Astronomy.MoonPhase(selectedDate);
     let phaseDesc;
-    if (phase < 0.01 || phase > 359.99) phaseDesc = 'New Moon';
-    else if (phase < 90) phaseDesc = 'Waxing Crescent';
-    else if (phase < 90.01) phaseDesc = 'First Quarter';
-    else if (phase < 180) phaseDesc = 'Waxing Gibbous';
-    else if (phase < 180.01) phaseDesc = 'Full Moon';
-    else if (phase < 270) phaseDesc = 'Waning Gibbous';
-    else if (phase < 270.01) phaseDesc = 'Third Quarter';
+    if (phase < 1 || phase > 359) phaseDesc = 'New Moon';
+    else if (phase < 89) phaseDesc = 'Waxing Crescent';
+    else if (phase < 91) phaseDesc = 'First Quarter';
+    else if (phase < 179) phaseDesc = 'Waxing Gibbous';
+    else if (phase < 181) phaseDesc = 'Full Moon';
+    else if (phase < 269) phaseDesc = 'Waning Gibbous';
+    else if (phase < 271) phaseDesc = 'Third Quarter';
     else phaseDesc = 'Waning Crescent';
-    document.getElementById('moonPhase').textContent = `Current Moon Phase: ${phaseDesc} (${phase.toFixed(2)}°)`;
+    const emoji = getMoonEmoji(phase);
+    document.getElementById('moonPhase').textContent = `Current Moon Phase: ${emoji} ${phaseDesc} (${phase.toFixed(2)}°)`;
 
     // Next Full Moon
-    const nextFullMoon = Astronomy.SearchMoonPhase(180, date, 365);
+    const nextFullMoon = Astronomy.SearchMoonPhase(180, selectedDate, 365);
     document.getElementById('nextFullMoon').textContent = nextFullMoon ?
-        `Next Full Moon: ${nextFullMoon.date.toUTCString()}` :
+        `Next Full Moon: ${nextFullMoon.date.toLocaleString()}` :
         'Next Full Moon not found within 365 days';
 
     // Next New Moon
-    const nextNewMoon = Astronomy.SearchMoonPhase(0, date, 365);
+    const nextNewMoon = Astronomy.SearchMoonPhase(0, selectedDate, 365);
     document.getElementById('nextNewMoon').textContent = nextNewMoon ?
-        `Next New Moon: ${nextNewMoon.date.toUTCString()}` :
+        `Next New Moon: ${nextNewMoon.date.toLocaleString()}` :
         'Next New Moon not found within 365 days';
 
     // Next Eclipse
-    const nextLunarEclipse = Astronomy.SearchLunarEclipse(date);
-    const nextSolarEclipse = Astronomy.SearchGlobalSolarEclipse(date);
+    const nextLunarEclipse = Astronomy.SearchLunarEclipse(selectedDate);
+    const nextSolarEclipse = Astronomy.SearchGlobalSolarEclipse(selectedDate);
     if (nextLunarEclipse && nextSolarEclipse) {
         if (nextLunarEclipse.peak.date < nextSolarEclipse.peak.date) {
             document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toUTCString()}`;
+                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toLocaleString()}`;
         } else {
             document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toUTCString()}`;
+                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toLocaleString()}`;
         }
     } else if (nextLunarEclipse) {
         document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toUTCString()}`;
+            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toLocaleString()}`;
     } else if (nextSolarEclipse) {
         document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toUTCString()}`;
+            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toLocaleString()}`;
     } else {
         document.getElementById('nextEclipse').textContent = 'No eclipse found';
     }
+}
+
+function getMoonEmoji(phase) {
+    if (phase < 1 || phase > 359) return '🌑'; // New Moon
+    else if (phase < 89) return '🌒'; // Waxing Crescent
+    else if (phase < 91) return '🌓'; // First Quarter
+    else if (phase < 179) return '🌔'; // Waxing Gibbous
+    else if (phase < 181) return '🌕'; // Full Moon
+    else if (phase < 269) return '🌖'; // Waning Gibbous
+    else if (phase < 271) return '🌗'; // Third Quarter
+    else return '🌘'; // Waning Crescent
 }
 
 function getLocation() {
@@ -98,10 +110,6 @@ function setManualLocation() {
     document.getElementById('locationDisplay').textContent =
         `Current Location: Latitude ${lat.toFixed(2)}°, Longitude ${lon.toFixed(2)}°`;
 }
-
-// Set initial date to current UTC time
-const now = new Date();
-document.getElementById('dateInput').value = now.toISOString().replace('T', ' ').substring(0, 19);
 
 // Initial update
 updateInfo();
