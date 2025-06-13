@@ -75,7 +75,7 @@ function updateInfo() {
             `Next Sunset: ${sunset.date.toLocaleString()}` :
             'Next Sunset: Not available';
         document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
-            `Next Solar Noon: ${solarNoon.time.toLocaleString()}` :
+            `Next Solar Noon: ${new Date(solarNoon.time).toLocaleString()}` :
             'Next Solar Noon: Not available';
     } else {
         document.getElementById('nextMoonrise').textContent = 'Next Moonrise: Location not set';
