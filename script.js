@@ -66,7 +66,7 @@ function updateInfo() {
             `Next Moonset: ${moonset.date.toLocaleString()}` :
             'Next Moonset: Not available';
         document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.time ?
-            `Next Moon Transit (High Moon): ${moonTransit.time.toLocaleString()}` :
+            `Next Moon Transit (High Moon): ${new Date(moonTransit.time).toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
         document.getElementById('nextSunrise').textContent = sunrise && sunrise.date ?
             `Next Sunrise: ${sunrise.date.toLocaleString()}` :
