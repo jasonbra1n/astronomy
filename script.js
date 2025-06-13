@@ -59,14 +59,6 @@ function updateInfo() {
         const sunset = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, -1, selectedDate, 1);
         const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate);
 
-        // Debug logs to inspect raw outputs (remove after testing)
-        console.log('Moonrise:', moonrise);
-        console.log('Moonset:', moonset);
-        console.log('Moon Transit:', moonTransit);
-        console.log('Sunrise:', sunrise);
-        console.log('Sunset:', sunset);
-        console.log('Solar Noon:', solarNoon);
-
         document.getElementById('nextMoonrise').textContent = moonrise && moonrise.date ?
             `Next Moonrise: ${moonrise.date.toLocaleString()}` :
             'Next Moonrise: Not available';
