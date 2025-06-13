@@ -38,6 +38,7 @@ function resetToNow() {
 function updateInfo() {
     const selectedDate = datePicker.selectedDates[0] || new Date();
     const midnight = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, 0, 0);
+
     const midnightPhase = Astronomy.MoonPhase(midnight);
     const todaysPhaseName = getMoonPhaseName(midnightPhase);
     const todaysEmoji = phaseEmojis[todaysPhaseName];
@@ -54,28 +55,26 @@ function updateInfo() {
         const moonrise = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, 1, selectedDate, 1);
         const moonset = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, -1, selectedDate, 1);
         const moonTransit = Astronomy.SearchHourAngle(Astronomy.Body.Moon, observer, 0, selectedDate);
-
         const sunrise = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, 1, selectedDate, 1);
         const sunset = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, -1, selectedDate, 1);
         const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate);
 
-        document.getElementById('nextMoonrise').textContent = moonrise ?
+        document.getElementById('nextMoonrise').textContent = moonrise && moonrise.date ?
             `Next Moonrise: ${moonrise.date.toLocaleString()}` :
             'Next Moonrise: Not available';
-        document.getElementById('nextMoonset').textContent = moonset ?
+        document.getElementById('nextMoonset').textContent = moonset && moonset.date ?
             `Next Moonset: ${moonset.date.toLocaleString()}` :
             'Next Moonset: Not available';
-        document.getElementById('nextMoonTransit').textContent = moonTransit ?
+        document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.date ?
             `Next Moon Transit (High Moon): ${moonTransit.date.toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
-
-        document.getElementById('nextSunrise').textContent = sunrise ?
+        document.getElementById('nextSunrise').textContent = sunrise && sunrise.date ?
             `Next Sunrise: ${sunrise.date.toLocaleString()}` :
             'Next Sunrise: Not available';
-        document.getElementById('nextSunset').textContent = sunset ?
+        document.getElementById('nextSunset').textContent = sunset && sunset.date ?
             `Next Sunset: ${sunset.date.toLocaleString()}` :
             'Next Sunset: Not available';
-        document.getElementById('nextSolarNoon').textContent = solarNoon ?
+        document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.date ?
             `Next Solar Noon: ${solarNoon.date.toLocaleString()}` :
             'Next Solar Noon: Not available';
     } else {
