@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,9 @@
   <div class="container">
     <header>
       <h1>✨ Astronomy Information</h1>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle light/dark mode">
+        🌓 Toggle Theme
+      </button>
     </header>
 
     <section>
@@ -68,8 +71,9 @@
         <div class="data-card"><span id="nextEclipse"></span></div>
       </div>
     </section>
-  </div>
+ </div>
   <script src="astronomy.browser.js"></script>
   <script src="script.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>
