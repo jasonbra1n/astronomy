@@ -54,28 +54,36 @@ function updateInfo() {
 
         const moonrise = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, 1, selectedDate, 1);
         const moonset = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, -1, selectedDate, 1);
-        const moonTransit = Astronomy.SearchHourAngle(Astronomy.Body.Moon, observer, 0, selectedDate);
+        const moonTransit = Astronomy.SearchHourAngle(Astronomy.Body.Moon, observer, 0, selectedDate, 1);
         const sunrise = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, 1, selectedDate, 1);
         const sunset = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, -1, selectedDate, 1);
-        const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate);
+        const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate, 1);
 
-        document.getElementById('nextMoonrise').textContent = moonrise && moonrise.date ?
-            `Next Moonrise: ${moonrise.date.toLocaleString()}` :
+        // Debug logs to inspect raw outputs (remove after testing)
+        console.log('Moonrise:', moonrise);
+        console.log('Moonset:', moonset);
+        console.log('Moon Transit:', moonTransit);
+        console.log('Sunrise:', sunrise);
+        console.log('Sunset:', sunset);
+        console.log('Solar Noon:', solarNoon);
+
+        document.getElementById('nextMoonrise').textContent = moonrise && moonrise.time ?
+            `Next Moonrise: ${moonrise.time.toLocaleString()}` :
             'Next Moonrise: Not available';
-        document.getElementById('nextMoonset').textContent = moonset && moonset.date ?
-            `Next Moonset: ${moonset.date.toLocaleString()}` :
+        document.getElementById('nextMoonset').textContent = moonset && moonset.time ?
+            `Next Moonset: ${moonset.time.toLocaleString()}` :
             'Next Moonset: Not available';
-        document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.date ?
-            `Next Moon Transit (High Moon): ${moonTransit.date.toLocaleString()}` :
+        document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.time ?
+            `Next Moon Transit (High Moon): ${moonTransit.time.toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
-        document.getElementById('nextSunrise').textContent = sunrise && sunrise.date ?
-            `Next Sunrise: ${sunrise.date.toLocaleString()}` :
+        document.getElementById('nextSunrise').textContent = sunrise && sunrise.time ?
+            `Next Sunrise: ${sunrise.time.toLocaleString()}` :
             'Next Sunrise: Not available';
-        document.getElementById('nextSunset').textContent = sunset && sunset.date ?
-            `Next Sunset: ${sunset.date.toLocaleString()}` :
+        document.getElementById('nextSunset').textContent = sunset && sunset.time ?
+            `Next Sunset: ${sunset.time.toLocaleString()}` :
             'Next Sunset: Not available';
-        document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.date ?
-            `Next Solar Noon: ${solarNoon.date.toLocaleString()}` :
+        document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
+            `Next Solar Noon: ${solarNoon.time.toLocaleString()}` :
             'Next Solar Noon: Not available';
     } else {
         document.getElementById('nextMoonrise').textContent = 'Next Moonrise: Location not set';
