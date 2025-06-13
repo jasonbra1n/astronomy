@@ -5,61 +5,190 @@
     --input-bg: #0f3460;
     --button-bg: #e94560;
     --button-text: #ffffff;
+    --highlight-bg: #21214a;
+    --card-bg: #23234a;
+    --card-border: #30305a;
+    --accent: #f9d923;
 }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: Arial, sans-serif;
-    margin: 20px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
+    min-height: 100vh;
 }
 
-h1 {
+.container {
+    max-width: 720px;
+    margin: 30px auto;
+    padding: 24px;
+    background-color: var(--section-bg);
+    border-radius: 14px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.7);
+}
+
+header h1 {
     text-align: center;
-    color: var(--text-color);
+    color: var(--accent);
+    font-size: 2.2em;
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
 }
 
 section {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: var(--section-bg);
-    border-radius: 5px;
+    margin-top: 26px;
+    padding: 18px 16px;
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+
+h2 {
+    color: var(--accent);
+    margin-bottom: 8px;
 }
 
 label {
     display: block;
-    margin-top: 10px;
+    margin-top: 8px;
     color: var(--text-color);
+    font-weight: 500;
 }
 
 input[type="text"], input[type="number"] {
     background-color: var(--input-bg);
     color: var(--text-color);
-    border: 1px solid #ccc;
-    padding: 5px;
-    margin-top: 5px;
-    width: 200px;
+    border: 1px solid #333;
+    padding: 7px 10px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 10px 0 14px 0;
 }
 
 button {
     background-color: var(--button-bg);
     color: var(--button-text);
-    padding: 5px 10px;
+    padding: 7px 16px;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
-    margin-right: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    transition: opacity 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 6px rgba(233,69,96,0.15);
 }
-
-button:hover {
-    opacity: 0.9;
+button:hover, button:focus {
+    opacity: 0.94;
+    box-shadow: 0 4px 14px rgba(233,69,96,0.18);
 }
 
 p {
     margin: 10px 0;
     color: var(--text-color);
+}
+
+.note {
+    font-size: 0.95em;
+    color: #aaa;
+}
+
+.optional {
+    font-size: 0.8em;
+    color: #bbb;
+}
+
+.location-inputs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.location-inputs label, .location-inputs input {
+    flex: 1 1 180px;
+    min-width: 120px;
+}
+
+.highlight {
+    font-size: 1.18em;
+    font-weight: bold;
+    background: var(--highlight-bg);
+    padding: 8px 14px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+}
+
+.data-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.data-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 10px 16px;
+    border-radius: 8px;
+    min-width: 160px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.11);
+    font-size: 1.04em;
+    color: var(--text-color);
+    transition: border-color 0.2s;
+}
+.data-card:hover {
+    border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 6px;
+        border-radius: 5px;
+    }
+    section {
+        padding: 10px 3px;
+        border-radius: 4px;
+    }
+    header h1 {
+        font-size: 1.3em;
+        margin-bottom: 7px;
+    }
+    h2 {
+        font-size: 1.08em;
+    }
+    .data-cards {
+        flex-direction: column;
+        gap: 7px;
+    }
+    .data-card {
+        padding: 8px 7px;
+        font-size: 1em;
+        min-width: 0;
+    }
+    .location-inputs {
+        flex-direction: column;
+        gap: 2px;
+    }
+}
+
+section {
+    animation: fadeIn 0.7s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: none;}
 }
