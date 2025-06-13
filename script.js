@@ -60,19 +60,19 @@ function updateInfo() {
         const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate);
 
         document.getElementById('nextMoonrise').textContent = moonrise && moonrise.date ?
-            `Next Moonrise: ${moonrise.date.toLocaleString()}` :
+            `Next Moonrise: ${new Date(moonrise.date).toLocaleString()}` :
             'Next Moonrise: Not available';
         document.getElementById('nextMoonset').textContent = moonset && moonset.date ?
-            `Next Moonset: ${moonset.date.toLocaleString()}` :
+            `Next Moonset: ${new Date(moonset.date).toLocaleString()}` :
             'Next Moonset: Not available';
         document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.time ?
             `Next Moon Transit (High Moon): ${new Date(moonTransit.time).toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
         document.getElementById('nextSunrise').textContent = sunrise && sunrise.date ?
-            `Next Sunrise: ${sunrise.date.toLocaleString()}` :
+            `Next Sunrise: ${new Date(sunrise.date).toLocaleString()}` :
             'Next Sunrise: Not available';
         document.getElementById('nextSunset').textContent = sunset && sunset.date ?
-            `Next Sunset: ${sunset.date.toLocaleString()}` :
+            `Next Sunset: ${new Date(sunset.date).toLocaleString()}` :
             'Next Sunset: Not available';
         document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
             `Next Solar Noon: ${new Date(solarNoon.time).toLocaleString()}` :
@@ -88,12 +88,12 @@ function updateInfo() {
 
     const nextFullMoon = Astronomy.SearchMoonPhase(180, selectedDate, 365);
     document.getElementById('nextFullMoon').textContent = nextFullMoon ?
-        `Next Full Moon: ${nextFullMoon.date.toLocaleString()}` :
+        `Next Full Moon: ${new Date(nextFullMoon.date).toLocaleString()}` :
         'Next Full Moon not found within 365 days';
 
     const nextNewMoon = Astronomy.SearchMoonPhase(0, selectedDate, 365);
     document.getElementById('nextNewMoon').textContent = nextNewMoon ?
-        `Next New Moon: ${nextNewMoon.date.toLocaleString()}` :
+        `Next New Moon: ${new Date(nextNewMoon.date).toLocaleString()}` :
         'Next New Moon not found within 365 days';
 
     const nextLunarEclipse = Astronomy.SearchLunarEclipse(selectedDate);
@@ -101,17 +101,17 @@ function updateInfo() {
     if (nextLunarEclipse && nextSolarEclipse) {
         if (nextLunarEclipse.peak.date < nextSolarEclipse.peak.date) {
             document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toLocaleString()}`;
+                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${new Date(nextLunarEclipse.peak.date).toLocaleString()}`;
         } else {
             document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toLocaleString()}`;
+                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${new Date(nextSolarEclipse.peak.date).toLocaleString()}`;
         }
     } else if (nextLunarEclipse) {
         document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${nextLunarEclipse.peak.date.toLocaleString()}`;
+            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${new Date(nextLunarEclipse.peak.date).toLocaleString()}`;
     } else if (nextSolarEclipse) {
         document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${nextSolarEclipse.peak.date.toLocaleString()}`;
+            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${new Date(nextSolarEclipse.peak.date).toLocaleString()}`;
     } else {
         document.getElementById('nextEclipse').textContent = 'No eclipse found';
     }
