@@ -9,46 +9,67 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
-    <h1>Astronomy Information</h1>
+  <div class="container">
+    <header>
+      <h1>✨ Astronomy Information</h1>
+    </header>
+
     <section>
-        <h2>Date and Time</h2>
-        <label for="dateInput">Date and Time (Local Time):</label>
-        <input type="text" id="dateInput" placeholder="Select date and time">
-        <button onclick="resetToNow()">Reset to Now</button>
-        <button onclick="updateInfo()">Update</button>
+      <h2>Date and Time</h2>
+      <label for="dateInput">Date and Time (Local):</label>
+      <input type="text" id="dateInput" placeholder="Select date and time" aria-label="Date and time">
+      <div class="button-group">
+        <button onclick="resetToNow()" aria-label="Reset to current date and time">Reset to Now</button>
+        <button onclick="updateInfo()" aria-label="Update astronomy information">Update</button>
+      </div>
     </section>
+
     <section>
-        <h2>Location (Optional)</h2>
-        <button onclick="getLocation()">Get Current Location</button>
-        <p id="locationDisplay">Location not set</p>
+      <h2>Location <span class="optional">(Optional)</span></h2>
+      <div class="button-group">
+        <button onclick="getLocation()" aria-label="Get current location">Get Current Location</button>
+        <button onclick="setManualLocation()" aria-label="Set manual location">Set Location</button>
+      </div>
+      <div class="location-inputs">
         <label for="latitude">Latitude (degrees, -90 to 90):</label>
-        <input type="number" id="latitude" step="any" min="-90" max="90">
+        <input type="number" id="latitude" step="any" min="-90" max="90" aria-label="Latitude">
         <label for="longitude">Longitude (degrees, -180 to 180):</label>
-        <input type="number" id="longitude" step="any" min="-180" max="180">
-        <button onclick="setManualLocation()">Set Location</button>
-        <p><em>Note: Location is used for moonrise, moonset, moon transit, sunrise, sunset, and solar noon calculations. If not set, these will not be displayed.</em></p>
+        <input type="number" id="longitude" step="any" min="-180" max="180" aria-label="Longitude">
+      </div>
+      <p id="locationDisplay">Location not set</p>
+      <p class="note"><em>Note: Location is used for moonrise, moonset, moon transit, sunrise, sunset, and solar noon calculations. If not set, these will not be displayed.</em></p>
     </section>
+
     <section>
-        <h2>Moon Details</h2>
-        <p id="todaysMoonPhase"></p>
-        <p id="exactMoonPhase"></p>
-        <p id="nextMoonrise"></p>
-        <p id="nextMoonset"></p>
-        <p id="nextMoonTransit"></p>
+      <h2>🌙 Moon Details</h2>
+      <p id="todaysMoonPhase" class="highlight"></p>
+      <p id="exactMoonPhase"></p>
+      <div class="data-cards">
+        <div class="data-card"><span id="nextMoonrise"></span></div>
+        <div class="data-card"><span id="nextMoonset"></span></div>
+        <div class="data-card"><span id="nextMoonTransit"></span></div>
+      </div>
     </section>
+
     <section>
-        <h2>Sun Details</h2>
-        <p id="nextSunrise"></p>
-        <p id="nextSunset"></p>
-        <p id="nextSolarNoon"></p>
+      <h2>☀️ Sun Details</h2>
+      <div class="data-cards">
+        <div class="data-card"><span id="nextSunrise"></span></div>
+        <div class="data-card"><span id="nextSunset"></span></div>
+        <div class="data-card"><span id="nextSolarNoon"></span></div>
+      </div>
     </section>
+
     <section>
-        <h2>Future Events</h2>
-        <p id="nextFullMoon"></p>
-        <p id="nextNewMoon"></p>
-        <p id="nextEclipse"></p>
+      <h2>🔭 Future Events</h2>
+      <div class="data-cards">
+        <div class="data-card"><span id="nextFullMoon"></span></div>
+        <div class="data-card"><span id="nextNewMoon"></span></div>
+        <div class="data-card"><span id="nextEclipse"></span></div>
+      </div>
     </section>
-    <script src="astronomy.browser.js"></script>
-    <script src="script.js"></script>
+  </div>
+  <script src="astronomy.browser.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
