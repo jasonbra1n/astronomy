@@ -1,4 +1,19 @@
-:root {
+/* Light theme variables */
+html[data-theme="light"] {
+    --bg-color: #f0f2f5;
+    --text-color: #1a1a2e;
+    --section-bg: #ffffff;
+    --input-bg: #e8eaed;
+    --button-bg: #e94560;
+    --button-text: #ffffff;
+    --highlight-bg: #f5f5ff;
+    --card-bg: #ffffff;
+    --card-border: #e0e0e0;
+    --accent: #e94560;
+}
+
+/* Dark theme variables */
+html[data-theme="dark"] {
     --bg-color: #1a1a2e;
     --text-color: #e0e0e0;
     --section-bg: #16213e;
@@ -11,6 +26,42 @@
     --accent: #f9d923;
 }
 
+/* Theme toggle button styles */
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--highlight-bg);
+    border-color: var(--accent);
+}
+
+/* Add transition for theme changes */
+body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .theme-toggle {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 10px auto;
+        display: block;
+    }
+}
+
+/* Existing styles */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -26,6 +77,10 @@ body {
     background-color: var(--section-bg);
     border-radius: 14px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.7);
+}
+
+header {
+    position: relative;
 }
 
 header h1 {
@@ -59,7 +114,7 @@ label {
 input[type="text"], input[type="number"] {
     background-color: var(--input-bg);
     color: var(--text-color);
-    border: 1px solid #333;
+    border: 1px solid var(--card-border);
     padding: 7px 10px;
     margin-top: 4px;
     margin-bottom: 8px;
@@ -88,6 +143,7 @@ button {
     transition: opacity 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 6px rgba(233,69,96,0.15);
 }
+
 button:hover, button:focus {
     opacity: 0.94;
     box-shadow: 0 4px 14px rgba(233,69,96,0.18);
@@ -114,6 +170,7 @@ p {
     flex-wrap: wrap;
     margin-bottom: 4px;
 }
+
 .location-inputs label, .location-inputs input {
     flex: 1 1 180px;
     min-width: 120px;
@@ -150,6 +207,7 @@ p {
     color: var(--text-color);
     transition: border-color 0.2s;
 }
+
 .data-card:hover {
     border-color: var(--accent);
 }
@@ -188,6 +246,7 @@ p {
 section {
     animation: fadeIn 0.7s;
 }
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px);}
     to { opacity: 1; transform: none;}
