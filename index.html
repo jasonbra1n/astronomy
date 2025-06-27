@@ -35,6 +35,10 @@
         <button onclick="getLocation()" aria-label="Get current location">Get Current Location</button>
         <button onclick="setManualLocation()" aria-label="Set manual location">Set Location</button>
       </div>
+        <label for="citySelect">Choose a popular city:</label>
+<select id="citySelect">
+  <option value="">-- Select a city --</option>
+</select>
       <div class="location-inputs">
         <label for="latitude">Latitude (degrees, -90 to 90):</label>
         <input type="number" id="latitude" step="any" min="-90" max="90" aria-label="Latitude">
