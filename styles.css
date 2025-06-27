@@ -164,16 +164,19 @@ p {
     color: #bbb;
 }
 
+/* Stacked label/input pairs for location inputs */
 .location-inputs {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 8px;
     margin-bottom: 4px;
 }
 
-.location-inputs label, .location-inputs input {
-    flex: 1 1 180px;
-    min-width: 120px;
+.location-inputs label,
+.location-inputs input {
+    flex: unset;
+    min-width: unset;
+    width: 100%;
 }
 
 .highlight {
@@ -238,7 +241,6 @@ p {
         min-width: 0;
     }
     .location-inputs {
-        flex-direction: column;
         gap: 2px;
     }
 }
