@@ -19,6 +19,58 @@ const phaseEmojis = {
     'Waning Crescent': '🌘'
 };
 
+const popularCities = [
+  { name: "New York, USA", lat: 40.7128, lon: -74.0060 },
+  { name: "London, UK", lat: 51.5074, lon: -0.1278 },
+  { name: "Tokyo, Japan", lat: 35.6895, lon: 139.6917 },
+  { name: "Paris, France", lat: 48.8566, lon: 2.3522 },
+  { name: "Sydney, Australia", lat: -33.8688, lon: 151.2093 },
+  { name: "Los Angeles, USA", lat: 34.0522, lon: -118.2437 },
+  { name: "Toronto, Canada", lat: 43.6532, lon: -79.3832 },
+  { name: "Berlin, Germany", lat: 52.5200, lon: 13.4050 },
+  { name: "Moscow, Russia", lat: 55.7558, lon: 37.6173 },
+  { name: "Beijing, China", lat: 39.9042, lon: 116.4074 },
+  { name: "Mexico City, Mexico", lat: 19.4326, lon: -99.1332 },
+  { name: "São Paulo, Brazil", lat: -23.5505, lon: -46.6333 },
+  { name: "Cairo, Egypt", lat: 30.0444, lon: 31.2357 },
+  { name: "Istanbul, Turkey", lat: 41.0082, lon: 28.9784 },
+  { name: "Dubai, UAE", lat: 25.2048, lon: 55.2708 },
+  { name: "Mumbai, India", lat: 19.0760, lon: 72.8777 },
+  { name: "Johannesburg, South Africa", lat: -26.2041, lon: 28.0473 },
+  { name: "Singapore", lat: 1.3521, lon: 103.8198 },
+  { name: "Hong Kong", lat: 22.3193, lon: 114.1694 },
+  { name: "Rome, Italy", lat: 41.9028, lon: 12.4964 },
+  { name: "Seoul, South Korea", lat: 37.5665, lon: 126.9780 },
+  { name: "Madrid, Spain", lat: 40.4168, lon: -3.7038 },
+  { name: "Chicago, USA", lat: 41.8781, lon: -87.6298 },
+  { name: "Bangkok, Thailand", lat: 13.7563, lon: 100.5018 },
+  { name: "Buenos Aires, Argentina", lat: -34.6037, lon: -58.3816 },
+  { name: "Amsterdam, Netherlands", lat: 52.3676, lon: 4.9041 },
+  { name: "Vienna, Austria", lat: 48.2082, lon: 16.3738 },
+  { name: "San Francisco, USA", lat: 37.7749, lon: -122.4194 },
+  { name: "Lagos, Nigeria", lat: 6.5244, lon: 3.3792 },
+  { name: "Jakarta, Indonesia", lat: -6.2088, lon: 106.8456 },
+  { name: "Shanghai, China", lat: 31.2304, lon: 121.4737 },
+  { name: "Lima, Peru", lat: -12.0464, lon: -77.0428 },
+  { name: "Kuala Lumpur, Malaysia", lat: 3.1390, lon: 101.6869 },
+  { name: "Zurich, Switzerland", lat: 47.3769, lon: 8.5417 },
+  { name: "Stockholm, Sweden", lat: 59.3293, lon: 18.0686 },
+  { name: "Oslo, Norway", lat: 59.9139, lon: 10.7522 },
+  { name: "Brussels, Belgium", lat: 50.8503, lon: 4.3517 },
+  { name: "Budapest, Hungary", lat: 47.4979, lon: 19.0402 },
+  { name: "Warsaw, Poland", lat: 52.2297, lon: 21.0122 },
+  { name: "Prague, Czechia", lat: 50.0755, lon: 14.4378 },
+  { name: "Santiago, Chile", lat: -33.4489, lon: -70.6693 },
+  { name: "Athens, Greece", lat: 37.9838, lon: 23.7275 },
+  { name: "Copenhagen, Denmark", lat: 55.6761, lon: 12.5683 },
+  { name: "Helsinki, Finland", lat: 60.1699, lon: 24.9384 },
+  { name: "Manila, Philippines", lat: 14.5995, lon: 120.9842 },
+  { name: "Riyadh, Saudi Arabia", lat: 24.7136, lon: 46.6753 },
+  { name: "Ankara, Turkey", lat: 39.9334, lon: 32.8597 },
+  { name: "Dublin, Ireland", lat: 53.3498, lon: -6.2603 },
+  { name: "Edinburgh, UK", lat: 55.9533, lon: -3.1883 }
+];
+
 function getMoonPhaseName(phase) {
     if (phase <= 10 || phase >= 350) return 'New Moon';
     else if (phase < 80) return 'Waxing Crescent';
