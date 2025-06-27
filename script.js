@@ -71,6 +71,29 @@ const popularCities = [
   { name: "Edinburgh, UK", lat: 55.9533, lon: -3.1883 }
 ];
 
+// Populate city dropdown
+const citySelect = document.getElementById('citySelect');
+popularCities.forEach(city => {
+  const option = document.createElement('option');
+  option.value = `${city.lat},${city.lon}`;
+  option.textContent = city.name;
+  citySelect.appendChild(option);
+});
+
+// Apply city coordinates on selection
+citySelect.addEventListener('change', function() {
+  const [lat, lon] = this.value.split(',');
+  if (lat && lon) {
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lon;
+    currentLatitude = parseFloat(lat);
+    currentLongitude = parseFloat(lon);
+    document.getElementById('locationDisplay').textContent =
+        `Current Location: ${citySelect.options[citySelect.selectedIndex].text}`;
+    updateInfo();
+  }
+});
+
 function getMoonPhaseName(phase) {
     if (phase <= 10 || phase >= 350) return 'New Moon';
     else if (phase < 80) return 'Waxing Crescent';
