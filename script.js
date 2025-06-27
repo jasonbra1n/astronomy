@@ -68,15 +68,32 @@ function updateInfo() {
         document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.time ?
             `Next Moon Transit (High Moon): ${new Date(moonTransit.time).toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
-        document.getElementById('nextSunrise').textContent = sunrise && sunrise.date ?
-            `Next Sunrise: ${new Date(sunrise.date).toLocaleString()}` :
-            'Next Sunrise: Not available';
-        document.getElementById('nextSunset').textContent = sunset && sunset.date ?
-            `Next Sunset: ${new Date(sunset.date).toLocaleString()}` :
-            'Next Sunset: Not available';
-        document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
-            `Next Solar Noon: ${new Date(solarNoon.time).toLocaleString()}` :
-            'Next Solar Noon: Not available';
+
+
+        const sunriseTime = sunrise && sunrise.date ? new Date(sunrise.date) : null;
+const sunsetTime = sunset && sunset.date ? new Date(sunset.date) : null;
+
+document.getElementById('nextSunrise').textContent = sunriseTime ?
+    `Next Sunrise: ${sunriseTime.toLocaleString()}` :
+    'Next Sunrise: Not available';
+document.getElementById('nextSunset').textContent = sunsetTime ?
+    `Next Sunset: ${sunsetTime.toLocaleString()}` :
+    'Next Sunset: Not available';
+document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
+    `Next Solar Noon: ${new Date(solarNoon.time).toLocaleString()}` :
+    'Next Solar Noon: Not available';
+
+// Calculate and display day length
+if (sunriseTime && sunsetTime) {
+    let diffMs = sunsetTime - sunriseTime;
+    if (diffMs < 0) diffMs += 24 * 60 * 60 * 1000; // handle sunset after midnight
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('dayLength').textContent = `Day Length: ${hours}h ${minutes}m`;
+} else {
+    document.getElementById('dayLength').textContent = 'Day Length: Not available';
+}
+        
     } else {
         document.getElementById('nextMoonrise').textContent = 'Next Moonrise: Location not set';
         document.getElementById('nextMoonset').textContent = 'Next Moonset: Location not set';
@@ -84,6 +101,7 @@ function updateInfo() {
         document.getElementById('nextSunrise').textContent = 'Next Sunrise: Location not set';
         document.getElementById('nextSunset').textContent = 'Next Sunset: Location not set';
         document.getElementById('nextSolarNoon').textContent = 'Next Solar Noon: Location not set';
+        document.getElementById('dayLength').textContent = 'Day Length: Location not set';
     }
 
     const nextFullMoon = Astronomy.SearchMoonPhase(180, selectedDate, 365);
