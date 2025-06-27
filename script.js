@@ -78,8 +78,12 @@ if (moonriseTime && moonsetTime) {
     const hours = Math.floor(diffMs / (1000 * 60 * 60));
     const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
     document.getElementById('moonUpTime').textContent = `Moon Up Time: ${hours}h ${minutes}m`;
+} else if (!moonriseTime && !moonsetTime) {
+    document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not rise or set today)';
+} else if (!moonriseTime) {
+    document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not rise today)';
 } else {
-    document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available';
+    document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not set today)';
 }
 
         const sunriseTime = sunrise && sunrise.date ? new Date(sunrise.date) : null;
