@@ -69,6 +69,18 @@ function updateInfo() {
             `Next Moon Transit (High Moon): ${new Date(moonTransit.time).toLocaleString()}` :
             'Next Moon Transit (High Moon): Not available';
 
+        const moonriseTime = moonrise && moonrise.date ? new Date(moonrise.date) : null;
+const moonsetTime = moonset && moonset.date ? new Date(moonset.date) : null;
+
+if (moonriseTime && moonsetTime) {
+    let diffMs = moonsetTime - moonriseTime;
+    if (diffMs < 0) diffMs += 24 * 60 * 60 * 1000; // handle moonset after midnight
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('moonUpTime').textContent = `Moon Up Time: ${hours}h ${minutes}m`;
+} else {
+    document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available';
+}
 
         const sunriseTime = sunrise && sunrise.date ? new Date(sunrise.date) : null;
 const sunsetTime = sunset && sunset.date ? new Date(sunset.date) : null;
