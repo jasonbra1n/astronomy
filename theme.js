@@ -1,31 +1,51 @@
-// Theme toggle functionality
 document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('themeToggle');
-    
-    // Check for saved theme preference, otherwise use device preference
-    const savedTheme = localStorage.getItem('theme') || 
-        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    
-    // Apply the initial theme
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    // Update button text based on current theme
-    const updateButtonText = (theme) => {
-        themeToggle.innerHTML = `${theme === 'light' ? '🌙' : '☀️'} Toggle Theme`;
+    const htmlElement = document.documentElement;
+
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            htmlElement.classList.add('dark-theme');
+            themeToggle.innerHTML = '☀️';
+        } else {
+            htmlElement.classList.remove('dark-theme');
+            themeToggle.innerHTML = '🌙';
+        }
+        localStorage.setItem('theme', theme);
     };
-    
-    updateButtonText(savedTheme);
-    
-    // Toggle theme
+
+    // Check for saved theme preference, or use device preference
+    let currentTheme = localStorage.getItem('theme');
+    if (!currentTheme) {
+        currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    applyTheme(currentTheme);
+
     themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        // Update theme
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        // Update button text
-        updateButtonText(newTheme);
+        const newTheme = htmlElement.classList.contains('dark-theme') ? 'light' : 'dark';
+        applyTheme(newTheme);
     });
+
+    /**
+     * Listen for theme changes from the parent LAB application when embedded in an iframe.
+     * This allows the tool's theme to stay in sync with the main application.
+     */
+    window.addEventListener('message', (event) => {
+        // Optional: Ensure the message is from a trusted origin
+        // if (event.origin !== 'https://lab.jasonbrain.com') return;
+
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme === 'dark-theme' ? 'dark' : 'light';
+            if (newTheme !== (htmlElement.classList.contains('dark-theme') ? 'dark' : 'light')) {
+                applyTheme(newTheme);
+            }
+        }
+    });
+
+    // On load, ask the parent window for its current theme.
+    // This is useful if the tool is loaded after the parent page has already been set to a specific theme.
+    // The '*' target origin is permissive; for production, you might restrict this to the parent's origin.
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'requestTheme' }, '*');
+    }
 });

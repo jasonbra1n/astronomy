@@ -1,80 +1,57 @@
-/* Light theme variables */
-html[data-theme="light"] {
-    --bg-color: #f0f2f5;
+/* 
+   LAB Digital Workshop - Core Theme Variables
+   Copy this block into your tool's main CSS file.
+*/
+:root {
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    
+    /* Light Theme (Default) */
+    --background-color: #f4f4f9;
+    --container-background: #ffffff;
     --text-color: #1a1a2e;
-    --section-bg: #ffffff;
-    --input-bg: #e8eaed;
-    --button-bg: #e94560;
-    --button-text: #ffffff;
-    --highlight-bg: #f5f5ff;
-    --card-bg: #ffffff;
-    --card-border: #e0e0e0;
-    --accent: #e94560;
+    --text-muted-color: #6c757d;
+    --primary-color: #007bff;
+    --primary-color-hover: #0056b3;
+    --border-color: #dee2e6;
+    --input-background: #ffffff;
+    --input-border-color: #ced4da;
 }
 
-/* Dark theme variables */
-html[data-theme="dark"] {
-    --bg-color: #1a1a2e;
+html.dark-theme {
+    /* Dark Theme */
+    --background-color: #121212;
+    --container-background: #1e1e1e;
     --text-color: #e0e0e0;
-    --section-bg: #16213e;
-    --input-bg: #0f3460;
-    --button-bg: #e94560;
-    --button-text: #ffffff;
-    --highlight-bg: #21214a;
-    --card-bg: #23234a;
-    --card-border: #30305a;
-    --accent: #f9d923;
+    --text-muted-color: #888;
+    --primary-color: #4dabf7;
+    --primary-color-hover: #1e88e5;
+    --border-color: #444;
+    --input-background: #2c2c2c;
+    --input-border-color: #555;
 }
 
-/* Theme toggle button styles */
-.theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--card-border);
-    padding: 8px 16px;
-    border-radius: 20px;
+/* New theme toggle emoji style */
+.theme-toggle-emoji {
     cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
-}
-
-.theme-toggle:hover {
-    background-color: var(--highlight-bg);
-    border-color: var(--accent);
-}
-
-/* Add transition for theme changes */
-body * {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-@media (max-width: 600px) {
-    .theme-toggle {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin: 10px auto;
-        display: block;
-    }
+    user-select: none; /* Prevents text selection on double-click */
 }
 
 /* Existing styles */
+/* Apply base styles */
 body {
-    background-color: var(--bg-color);
+    background-color: var(--background-color);
     color: var(--text-color);
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
-    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .container {
     max-width: 720px;
     margin: 30px auto;
     padding: 24px;
-    background-color: var(--section-bg);
+    background-color: var(--container-background);
     border-radius: 14px;
     box-shadow: 0 4px 32px rgba(0,0,0,0.7);
 }
@@ -85,22 +62,22 @@ header {
 
 header h1 {
     text-align: center;
-    color: var(--accent);
+    color: var(--primary-color);
     font-size: 2.2em;
     letter-spacing: 0.03em;
     margin-bottom: 10px;
 }
 
 section {
-    margin-top: 26px;
+    margin-top: 1.5rem;
     padding: 18px 16px;
-    background-color: var(--bg-color);
+    background-color: var(--background-color);
     border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    border: 1px solid var(--border-color);
 }
 
 h2 {
-    color: var(--accent);
+    color: var(--primary-color);
     margin-bottom: 8px;
 }
 
@@ -111,17 +88,18 @@ label {
     font-weight: 500;
 }
 
-input[type="text"], input[type="number"] {
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    border: 1px solid var(--card-border);
-    padding: 7px 10px;
-    margin-top: 4px;
-    margin-bottom: 8px;
-    border-radius: 4px;
+input[type="text"],
+input[type="number"],
+textarea {
+    display: block;
     width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: var(--input-background);
+    border: 1px solid var(--input-border-color);
+    border-radius: 0.25rem;
     box-sizing: border-box;
-    font-size: 1em;
 }
 
 .button-group {
@@ -131,22 +109,23 @@ input[type="text"], input[type="number"] {
     margin: 10px 0 14px 0;
 }
 
-button {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    padding: 7px 16px;
-    border: none;
-    border-radius: 4px;
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
     cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 600;
-    transition: opacity 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 6px rgba(233,69,96,0.15);
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    color: #fff;
+    background-color: var(--primary-color);
+    transition: background-color 0.15s ease-in-out;
 }
 
-button:hover, button:focus {
-    opacity: 0.94;
-    box-shadow: 0 4px 14px rgba(233,69,96,0.18);
+.btn:hover {
+    background-color: var(--primary-color-hover);
 }
 
 p {
@@ -156,12 +135,12 @@ p {
 
 .note {
     font-size: 0.95em;
-    color: #aaa;
+    color: var(--text-muted-color);
 }
 
 .optional {
     font-size: 0.8em;
-    color: #bbb;
+    color: var(--text-muted-color);
 }
 
 /* Stacked label/input pairs for location inputs */
@@ -182,12 +161,12 @@ p {
 .highlight {
     font-size: 1.18em;
     font-weight: bold;
-    background: var(--highlight-bg);
+    background: var(--background-color);
     padding: 8px 14px;
     border-radius: 6px;
     display: inline-block;
     margin-bottom: 8px;
-    color: var(--accent);
+    color: var(--primary-color);
     letter-spacing: 0.01em;
 }
 
@@ -199,20 +178,15 @@ p {
 }
 
 .data-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
+    background: var(--container-background);
+    border: 1px solid var(--border-color);
     padding: 10px 16px;
     border-radius: 8px;
     min-width: 160px;
     margin-bottom: 8px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.11);
     font-size: 1.04em;
     color: var(--text-color);
-    transition: border-color 0.2s;
-}
-
-.data-card:hover {
-    border-color: var(--accent);
+    transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 @media (max-width: 600px) {
@@ -243,13 +217,4 @@ p {
     .location-inputs {
         gap: 2px;
     }
-}
-
-section {
-    animation: fadeIn 0.7s;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px);}
-    to { opacity: 1; transform: none;}
 }

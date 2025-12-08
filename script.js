@@ -1,6 +1,28 @@
 let currentLatitude = null;
 let currentLongitude = null;
 
+// Cache DOM elements for better performance and readability
+const elements = {
+    dateInput: document.getElementById('dateInput'),
+    citySelect: document.getElementById('citySelect'),
+    latitudeInput: document.getElementById('latitude'),
+    longitudeInput: document.getElementById('longitude'),
+    locationDisplay: document.getElementById('locationDisplay'),
+    todaysMoonPhase: document.getElementById('todaysMoonPhase'),
+    exactMoonPhase: document.getElementById('exactMoonPhase'),
+    nextMoonrise: document.getElementById('nextMoonrise'),
+    nextMoonset: document.getElementById('nextMoonset'),
+    nextMoonTransit: document.getElementById('nextMoonTransit'),
+    moonUpTime: document.getElementById('moonUpTime'),
+    nextSunrise: document.getElementById('nextSunrise'),
+    nextSunset: document.getElementById('nextSunset'),
+    nextSolarNoon: document.getElementById('nextSolarNoon'),
+    dayLength: document.getElementById('dayLength'),
+    nextFullMoon: document.getElementById('nextFullMoon'),
+    nextNewMoon: document.getElementById('nextNewMoon'),
+    nextEclipse: document.getElementById('nextEclipse'),
+};
+
 const datePicker = flatpickr("#dateInput", {
     enableTime: true,
     dateFormat: "Y-m-d H:i:S",
@@ -72,20 +94,19 @@ const popularCities = [
 ];
 
 // Populate city dropdown
-const citySelect = document.getElementById('citySelect');
 popularCities.forEach(city => {
   const option = document.createElement('option');
   option.value = `${city.lat},${city.lon}`;
   option.textContent = city.name;
-  citySelect.appendChild(option);
+  elements.citySelect.appendChild(option);
 });
 
 // Apply city coordinates on selection
-citySelect.addEventListener('change', function() {
+elements.citySelect.addEventListener('change', function() {
   const [lat, lon] = this.value.split(',');
   if (lat && lon) {
-    document.getElementById('latitude').value = lat;
-    document.getElementById('longitude').value = lon;
+    elements.latitudeInput.value = lat;
+    elements.longitudeInput.value = lon;
     currentLatitude = parseFloat(lat);
     currentLongitude = parseFloat(lon);
     document.getElementById('locationDisplay').textContent =
@@ -110,121 +131,103 @@ function resetToNow() {
     updateInfo();
 }
 
-function updateInfo() {
-    const selectedDate = new Date(datePicker.selectedDates[0] || new Date());
+function updateMoonDetails(selectedDate) {
     const midnight = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, 0, 0);
-
     const midnightPhase = Astronomy.MoonPhase(midnight);
     const todaysPhaseName = getMoonPhaseName(midnightPhase);
     const todaysEmoji = phaseEmojis[todaysPhaseName];
-    document.getElementById('todaysMoonPhase').textContent = `Today's Moon Phase: ${todaysEmoji} ${todaysPhaseName}`;
+    elements.todaysMoonPhase.textContent = `Today's Moon Phase: ${todaysEmoji} ${todaysPhaseName}`;
 
     const exactPhase = Astronomy.MoonPhase(selectedDate);
     const exactPhaseName = getMoonPhaseName(exactPhase);
     const exactEmoji = phaseEmojis[exactPhaseName];
-    document.getElementById('exactMoonPhase').textContent = `Moon Phase at Selected Time: ${exactEmoji} ${exactPhaseName} (${exactPhase.toFixed(2)}°)`;
+    elements.exactMoonPhase.textContent = `Moon Phase at Selected Time: ${exactEmoji} ${exactPhaseName} (${exactPhase.toFixed(2)}°)`;
+}
 
+function formatDate(date) {
+    return date ? new Date(date).toLocaleString() : 'Not available';
+}
+
+function calculateTimeDifference(startTime, endTime) {
+    if (!startTime || !endTime) return null;
+    let diffMs = endTime - startTime;
+    if (diffMs < 0) diffMs += 24 * 60 * 60 * 1000; // Handle events crossing midnight
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+}
+
+function updateRiseSetTimes(selectedDate) {
     if (currentLatitude !== null && currentLongitude !== null) {
         const observer = new Astronomy.Observer(currentLatitude, currentLongitude, 0);
 
         const moonrise = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, 1, selectedDate, 1);
         const moonset = Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, -1, selectedDate, 1);
         const moonTransit = Astronomy.SearchHourAngle(Astronomy.Body.Moon, observer, 0, selectedDate);
+        
+        elements.nextMoonrise.textContent = `Next Moonrise: ${formatDate(moonrise?.date)}`;
+        elements.nextMoonset.textContent = `Next Moonset: ${formatDate(moonset?.date)}`;
+        elements.nextMoonTransit.textContent = `Next Moon Transit (High Moon): ${formatDate(moonTransit?.time.date)}`;
+
+        const moonUpDuration = calculateTimeDifference(moonrise?.date, moonset?.date);
+        elements.moonUpTime.textContent = moonUpDuration ? `Moon Up Time: ${moonUpDuration}` : 'Moon Up Time: Not available';
+
         const sunrise = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, 1, selectedDate, 1);
         const sunset = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, -1, selectedDate, 1);
         const solarNoon = Astronomy.SearchHourAngle(Astronomy.Body.Sun, observer, 0, selectedDate);
 
-        document.getElementById('nextMoonrise').textContent = moonrise && moonrise.date ?
-            `Next Moonrise: ${new Date(moonrise.date).toLocaleString()}` :
-            'Next Moonrise: Not available';
-        document.getElementById('nextMoonset').textContent = moonset && moonset.date ?
-            `Next Moonset: ${new Date(moonset.date).toLocaleString()}` :
-            'Next Moonset: Not available';
-        document.getElementById('nextMoonTransit').textContent = moonTransit && moonTransit.time ?
-            `Next Moon Transit (High Moon): ${new Date(moonTransit.time).toLocaleString()}` :
-            'Next Moon Transit (High Moon): Not available';
+        elements.nextSunrise.textContent = `Next Sunrise: ${formatDate(sunrise?.date)}`;
+        elements.nextSunset.textContent = `Next Sunset: ${formatDate(sunset?.date)}`;
+        elements.nextSolarNoon.textContent = `Next Solar Noon: ${formatDate(solarNoon?.time.date)}`;
 
-        const moonriseTime = moonrise && moonrise.date ? new Date(moonrise.date) : null;
-        const moonsetTime = moonset && moonset.date ? new Date(moonset.date) : null;
-        
-        if (moonriseTime && moonsetTime) {
-            let diffMs = moonsetTime - moonriseTime;
-            if (diffMs < 0) diffMs += 24 * 60 * 60 * 1000; // handle moonset after midnight
-            const hours = Math.floor(diffMs / (1000 * 60 * 60));
-            const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById('moonUpTime').textContent = `Moon Up Time: ${hours}h ${minutes}m`;
-        } else if (!moonriseTime && !moonsetTime) {
-            document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not rise or set today)';
-        } else if (!moonriseTime) {
-            document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not rise today)';
-        } else {
-            document.getElementById('moonUpTime').textContent = 'Moon Up Time: Not available (moon does not set today)';
-        }
-
-        const sunriseTime = sunrise && sunrise.date ? new Date(sunrise.date) : null;
-        const sunsetTime = sunset && sunset.date ? new Date(sunset.date) : null;
-        
-        document.getElementById('nextSunrise').textContent = sunriseTime ?
-            `Next Sunrise: ${sunriseTime.toLocaleString()}` :
-            'Next Sunrise: Not available';
-        document.getElementById('nextSunset').textContent = sunsetTime ?
-            `Next Sunset: ${sunsetTime.toLocaleString()}` :
-            'Next Sunset: Not available';
-        document.getElementById('nextSolarNoon').textContent = solarNoon && solarNoon.time ?
-            `Next Solar Noon: ${new Date(solarNoon.time).toLocaleString()}` :
-            'Next Solar Noon: Not available';
-
-// Calculate and display day length
-if (sunriseTime && sunsetTime) {
-    let diffMs = sunsetTime - sunriseTime;
-    if (diffMs < 0) diffMs += 24 * 60 * 60 * 1000; // handle sunset after midnight
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    document.getElementById('dayLength').textContent = `Day Length: ${hours}h ${minutes}m`;
-} else {
-    document.getElementById('dayLength').textContent = 'Day Length: Not available';
-}
-        
+        const dayDuration = calculateTimeDifference(sunrise?.date, sunset?.date);
+        elements.dayLength.textContent = dayDuration ? `Day Length: ${dayDuration}` : 'Day Length: Not available';
     } else {
-        document.getElementById('nextMoonrise').textContent = 'Next Moonrise: Location not set';
-        document.getElementById('nextMoonset').textContent = 'Next Moonset: Location not set';
-        document.getElementById('nextMoonTransit').textContent = 'Next Moon Transit (High Moon): Location not set';
-        document.getElementById('nextSunrise').textContent = 'Next Sunrise: Location not set';
-        document.getElementById('nextSunset').textContent = 'Next Sunset: Location not set';
-        document.getElementById('nextSolarNoon').textContent = 'Next Solar Noon: Location not set';
-        document.getElementById('dayLength').textContent = 'Day Length: Location not set';
-        document.getElementById('moonUpTime').textContent = 'Moon Up Time: Location not set';
+        ['nextMoonrise', 'nextMoonset', 'nextMoonTransit', 'moonUpTime', 'nextSunrise', 'nextSunset', 'nextSolarNoon', 'dayLength'].forEach(id => {
+            const baseText = elements[id].textContent.split(':')[0];
+            elements[id].textContent = `${baseText}: Location not set`;
+        });
     }
+}
 
+function updateFutureEvents(selectedDate) {
     const nextFullMoon = Astronomy.SearchMoonPhase(180, selectedDate, 365);
-    document.getElementById('nextFullMoon').textContent = nextFullMoon ?
-        `Next Full Moon: ${new Date(nextFullMoon.date).toLocaleString()}` :
+    elements.nextFullMoon.textContent = nextFullMoon ?
+        `Next Full Moon: ${formatDate(nextFullMoon.date)}` :
         'Next Full Moon not found within 365 days';
 
     const nextNewMoon = Astronomy.SearchMoonPhase(0, selectedDate, 365);
-    document.getElementById('nextNewMoon').textContent = nextNewMoon ?
-        `Next New Moon: ${new Date(nextNewMoon.date).toLocaleString()}` :
+    elements.nextNewMoon.textContent = nextNewMoon ?
+        `Next New Moon: ${formatDate(nextNewMoon.date)}` :
         'Next New Moon not found within 365 days';
 
     const nextLunarEclipse = Astronomy.SearchLunarEclipse(selectedDate);
     const nextSolarEclipse = Astronomy.SearchGlobalSolarEclipse(selectedDate);
+
     if (nextLunarEclipse && nextSolarEclipse) {
         if (nextLunarEclipse.peak.date < nextSolarEclipse.peak.date) {
-            document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${new Date(nextLunarEclipse.peak.date).toLocaleString()}`;
+            elements.nextEclipse.textContent =
+                `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${formatDate(nextLunarEclipse.peak.date)}`;
         } else {
-            document.getElementById('nextEclipse').textContent =
-                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${new Date(nextSolarEclipse.peak.date).toLocaleString()}`;
+            elements.nextEclipse.textContent =
+                `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${formatDate(nextSolarEclipse.peak.date)}`;
         }
     } else if (nextLunarEclipse) {
-        document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${new Date(nextLunarEclipse.peak.date).toLocaleString()}`;
+        elements.nextEclipse.textContent =
+            `Next Eclipse: ${nextLunarEclipse.kind} Lunar on ${formatDate(nextLunarEclipse.peak.date)}`;
     } else if (nextSolarEclipse) {
-        document.getElementById('nextEclipse').textContent =
-            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${new Date(nextSolarEclipse.peak.date).toLocaleString()}`;
+        elements.nextEclipse.textContent =
+            `Next Eclipse: ${nextSolarEclipse.kind} Solar on ${formatDate(nextSolarEclipse.peak.date)}`;
     } else {
-        document.getElementById('nextEclipse').textContent = 'No eclipse found';
+        elements.nextEclipse.textContent = 'No eclipse found';
     }
+}
+
+function updateInfo() {
+    const selectedDate = new Date(datePicker.selectedDates[0] || new Date());
+    updateMoonDetails(selectedDate);
+    updateRiseSetTimes(selectedDate);
+    updateFutureEvents(selectedDate);
 }
 
 function getLocation() {
@@ -233,14 +236,16 @@ function getLocation() {
             (position) => {
                 currentLatitude = position.coords.latitude;
                 currentLongitude = position.coords.longitude;
-                document.getElementById('locationDisplay').textContent =
+                elements.locationDisplay.textContent =
                     `Current Location: Latitude ${currentLatitude.toFixed(2)}°, Longitude ${currentLongitude.toFixed(2)}°`;
-                document.getElementById('latitude').value = currentLatitude;
-                document.getElementById('longitude').value = currentLongitude;
+                elements.latitudeInput.value = currentLatitude;
+                elements.longitudeInput.value = currentLongitude;
                 updateInfo();
             },
             (error) => {
-                alert('Unable to retrieve location: ' + error.message);
+                let message = 'Unable to retrieve location. Please check your browser settings.';
+                if (error.code === error.PERMISSION_DENIED) message = 'Location access was denied.';
+                alert(message);
             }
         );
     } else {
@@ -249,8 +254,8 @@ function getLocation() {
 }
 
 function setManualLocation() {
-    const lat = parseFloat(document.getElementById('latitude').value);
-    const lon = parseFloat(document.getElementById('longitude').value);
+    const lat = parseFloat(elements.latitudeInput.value);
+    const lon = parseFloat(elements.longitudeInput.value);
     if (isNaN(lat) || lat < -90 || lat > 90) {
         alert('Latitude must be between -90 and 90 degrees.');
         return;
@@ -261,7 +266,7 @@ function setManualLocation() {
     }
     currentLatitude = lat;
     currentLongitude = lon;
-    document.getElementById('locationDisplay').textContent =
+    elements.locationDisplay.textContent =
         `Current Location: Latitude ${lat.toFixed(2)}°, Longitude ${lon.toFixed(2)}°`;
     updateInfo();
 }

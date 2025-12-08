@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" class="dark-theme">
 <head>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0633259514526906"
      crossorigin="anonymous"></script>
@@ -13,10 +13,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>✨ Astronomy Information</h1>
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle light/dark mode">
-        🌓 Toggle Theme
-      </button>
+      <h1><span id="themeToggle" class="theme-toggle-emoji" aria-label="Toggle light/dark mode">✨</span> Astronomy Information</h1>
     </header>
 
     <section>
@@ -24,16 +21,16 @@
       <label for="dateInput">Date and Time (Local):</label>
       <input type="text" id="dateInput" placeholder="Select date and time" aria-label="Date and time">
       <div class="button-group">
-        <button onclick="resetToNow()" aria-label="Reset to current date and time">Reset to Now</button>
-        <button onclick="updateInfo()" aria-label="Update astronomy information">Update</button>
+        <button class="btn" onclick="resetToNow()" aria-label="Reset to current date and time">Reset to Now</button>
+        <button class="btn" onclick="updateInfo()" aria-label="Update astronomy information">Update</button>
       </div>
     </section>
 
     <section>
       <h2>Location <span class="optional">(Optional)</span></h2>
       <div class="button-group">
-        <button onclick="getLocation()" aria-label="Get current location">Get Current Location</button>
-        <button onclick="setManualLocation()" aria-label="Set manual location">Set Location</button>
+        <button class="btn" onclick="getLocation()" aria-label="Get current location">Get Current Location</button>
+        <button class="btn" onclick="setManualLocation()" aria-label="Set manual location">Set Location</button>
       </div>
         <label for="citySelect">Choose a popular city:</label>
 <select id="citySelect">
