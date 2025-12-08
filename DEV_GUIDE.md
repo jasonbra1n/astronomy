@@ -22,7 +22,7 @@ The repository contains the following key files:
 -   `script.js`: The core JavaScript file that handles user interactions, date/time management, and astronomical calculations.
 -   `theme.js`: Handles theme switching (light/dark) and synchronization with the parent application when embedded in an iframe.
 -   `astronomy.browser.js`: The Astronomy Engine library used for all celestial calculations.
--   `README.markdown`, `ROADMAP.md`, `PROGRESS.md`: Project documentation.
+-   `README.markdown`, `ROADMAP.md`, `PROGRESS.md`, `TESTING_PLAN.md`: Project documentation.
 
 ## Dependencies
 

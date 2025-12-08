@@ -13,6 +13,7 @@ This update focused on aligning the tool with the LAB Digital Workshop's visual 
 -   **Theme Synchronization**: Added logic to `theme.js` to listen for `postMessage` events, allowing the theme to sync automatically when the tool is embedded in the main LAB application.
 -   **UI Enhancements**: Added a dropdown menu with popular world cities for quick location setting.
 -   **Code Refactoring**: Broke down the main `updateInfo` function in `script.js` into smaller, more manageable pieces for better readability and maintenance.
+-   **Responsive Layout Overhaul**: Implemented a responsive grid system for a more compact and organized layout on desktop, which stacks to a single column on mobile devices.
 
 ## Version 1.0 (Initial Release)
 

@@ -16,7 +16,7 @@ These are the major features planned for implementation:
 These are smaller-scale technical improvements and refactoring tasks.
 
 -   [x] **Code Refactoring**: Break down the main `script.js` file into smaller, more manageable modules (e.g., `ui.js`, `calculations.js`). *(Initial refactoring of `updateInfo` complete).*
--   [ ] **Add Unit Tests**: Implement a testing framework (like Jest or Mocha) to write unit tests for the core calculation functions to ensure accuracy.
+-   [ ] **Add Unit Tests**: Implement the browser-based testing framework defined in `TESTING_PLAN.md` to verify core calculation functions.
 -   [ ] **Improve Accessibility**: Review and enhance the HTML structure with appropriate ARIA attributes to improve screen reader support.
 -   [ ] **Configuration File**: Move hardcoded values (like moon phase name thresholds) into a separate configuration object or file.
 -   [x] **Theme Synchronization**: Implement logic to sync the theme when embedded in the LAB Digital Workshop parent application. *(Complete).*
