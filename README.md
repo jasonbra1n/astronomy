@@ -18,7 +18,7 @@ The page is designed to function both as a standalone tool hosted on GitHub Page
 ## Usage
 1. Visit `https://jasonbra1n.github.io/astronomy/`.
 2. The page defaults to the current local date and time. All astronomical data is calculated automatically.
-3. Use the date picker to select a different date and time. The data will refresh upon selection.
+3. Use the date picker to select a different date and time. The data will refresh automatically upon selection.
 4. To enable location-specific data (rise/set times), do one of the following:
    - Click **"Get Current Location"** to use your device's location.
    - Select a city from the **"Choose a popular city"** dropdown.
